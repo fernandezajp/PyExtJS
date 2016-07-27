@@ -10,10 +10,17 @@ PyExtJS
 - <a href="#bugs">Bug reports</a>
 - <a href="#gettingstarted">Getting Started</a>
   * <a href="#numpy">numpy</a>
+    * <a href="#array">array</a>
     * <a href="#linspace">linspace</a>
+    * <a href="#logspace">logspace</a>
     * <a href="#exp">exp</a>
     * <a href="#arange">arange</a>
+    * <a href="#power">power</a>
+    * <a href="#reshape">reshape</a>
+    * <a href="#shape">shape</a>
+    * <a href="#size">size</a>
     * <a href="#zeros">zeros</a>
+    * <a href="#random">random</a>
     * <a href="#polyfit">polyfit</a>
   * <a href="#scipy">scipy</a>
     * <a href="#interpolate">interpolate</a>
@@ -55,6 +62,34 @@ To search for bugs or report them, please use the Scipy Bug Tracker at:
 
 ### <a id="numpy">numpy</a>
 
+importing a library  
+
+Python
+
+    >>> import numpy as np
+
+<br>
+Javascript with PyExtJS
+
+    > np = numpy;
+<br>
+
+#### *<a id="array">Using array</a>*
+
+Python
+
+    >>> import numpy
+    >>> numpy.array([[1,2],[3,4]])
+        array([[1, 2], [3, 4]])
+  
+<br>
+Javascript with PyExtJS
+
+    > numpy.array([[1,2],[3,4]]);
+      [[1, 2], [3, 4]]
+
+<br>
+
 #### *<a id="linspace">Using linspace</a>*
 
 Python
@@ -68,6 +103,22 @@ Javascript with PyExtJS
 
     > numpy.linspace(2.0, 3.0, 5);
       [2, 2.25, 2.5, 2.75, 3]
+
+<br>
+
+#### *<a id="logspace">Using logspace</a>*
+
+Python
+
+    >>> import numpy
+    >>> numpy.logspace(2.0, 3.0, 5)
+        array([100.,177.827941,316.22776602,562.34132519,1000.])
+  
+<br>
+Javascript with PyExtJS
+
+    > numpy.logspace(2.0, 3.0, 5);
+      [100, 177.82794100389228, 316.22776601683796, 562.341325190349, 1000]
 
 <br>
 
@@ -114,6 +165,88 @@ Javascript with PyExtJS
       [3, 5]
 
 <br>
+#### *<a id="power">Using power</a>*
+
+Python
+
+    >>> import numpy
+    >>> x1 = range(6)
+    >>> numpy.power(x1, 3)
+        array([  0,   1,   8,  27,  64, 125])
+    >>> x2 = [1.0, 2.0, 3.0, 3.0, 2.0, 1.0]
+    >>> np.power(x1, x2)
+        array([  0.,   1.,   8.,  27.,  16.,   5.])
+  
+<br>
+Javascript with PyExtJS
+
+    > x1 = numpy.range(6);
+      [0, 1, 2, 3, 4, 5]
+    > numpy.power(x1, 3);
+      [0, 1, 8, 27, 64, 125]
+    > x2 = [1.0, 2.0, 3.0, 3.0, 2.0, 1.0];
+      [1, 2, 3, 3, 2, 1]
+    > numpy.power(x1, x2);
+      [0, 1, 8, 27, 16, 5]
+
+<br>
+
+#### *<a id="reshape">Using reshape</a>*
+
+Python
+
+    >>> import numpy
+    >>> a = numpy.arange(6).reshape((3, 2))
+    >>> a
+        array([[0, 1],
+             [2, 3],
+               [4, 5]])
+  
+<br>
+Javascript with PyExtJS
+
+    > a = numpy.arange(6).reshape([3, 2]);
+    [[0, 1], [2, 3], [4, 5]]
+      
+<br>
+
+#### *<a id="shape">Using shape</a>*
+
+Python
+
+    >>> import numpy
+    >>> a = numpy.arange(6).reshape((3, 2))
+    >>> a.shape
+        (3, 2)
+  
+<br>
+Javascript with PyExtJS
+
+    > a = numpy.arange(6).reshape([3, 2]);
+    [[0, 1], [2, 3], [4, 5]]
+    > a.shape();
+      [3, 2]
+      
+<br>
+
+#### *<a id="size">Using size</a>*
+
+Python
+
+    >>> import numpy
+    >>> a = numpy.arange(6).reshape((3, 2))
+    >>> a.size
+        6
+  
+<br>
+Javascript with PyExtJS
+
+    > a = numpy.arange(6).reshape([3, 2]);
+    [[0, 1], [2, 3], [4, 5]]
+    > a.size();
+      6
+      
+<br>
 
 #### *<a id="zeros">Using zeros</a>*
 
@@ -132,8 +265,33 @@ Javascript with PyExtJS
 
     > numpy.zeros(5);
       [0, 0, 0, 0, 0]
-    > numpy.zeros(3, 2);
+    > numpy.zeros([3, 2]);
       [[0, 0],[0, 0],[0, 0]]
+
+<br>
+
+#### *<a id="random">Using random</a>*
+
+Python
+
+    >>> import numpy
+    >>> numpy.random.random()
+        0.298740136734731
+    >>> numpy.random.random(2)
+        array([ 0.05538307,  0.74942997])
+    >>> numpy.random.random([2,2])
+        array([[ 0.51655267,  0.57323634],
+               [ 0.82552349,  0.10818737]])
+  
+<br>
+Javascript with PyExtJS
+
+    > numpy.random.random();
+      0.298740136734731
+    > numpy.random.random(2);
+      [0.05538307, 0.74942997]
+    > numpy.random.random([2,2]);
+      [[0.51655267, 0.57323634], [0.82552349, 0.10818737]]
 
 <br>
 
