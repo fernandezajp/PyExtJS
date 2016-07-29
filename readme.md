@@ -19,7 +19,13 @@ PyExtJS
     * <a href="#reshape">reshape</a>
     * <a href="#shape">shape</a>
     * <a href="#size">size</a>
+    * <a href="#ndim">ndim</a>
+    * <a href="#strides">strides</a>
+    * <a href="#dtype">dtype</a>
+    * <a href="#ravel">ravel</a>
+    * <a href="#transpose">T / transpose</a>
     * <a href="#zeros">zeros</a>
+    * <a href="#ones">ones</a>
     * <a href="#random">random</a>
     * <a href="#polyfit">polyfit</a>
   * <a href="#scipy">scipy</a>
@@ -224,7 +230,7 @@ Javascript with PyExtJS
 
     > a = numpy.arange(6).reshape([3, 2]);
     [[0, 1], [2, 3], [4, 5]]
-    > a.shape();
+    > a.shape;
       [3, 2]
       
 <br>
@@ -243,8 +249,110 @@ Javascript with PyExtJS
 
     > a = numpy.arange(6).reshape([3, 2]);
     [[0, 1], [2, 3], [4, 5]]
-    > a.size();
+    > a.size;
       6
+      
+<br>
+
+#### *<a id="ndim">Using ndim</a>*
+
+Python
+
+    >>> import numpy
+    >>> a = numpy.arange(6).reshape((3, 2))
+    >>> a.ndim
+        2
+  
+<br>
+Javascript with PyExtJS
+
+    > a = numpy.arange(6).reshape([3, 2]);
+    [[0, 1], [2, 3], [4, 5]]
+    > a.ndim;
+      2
+      
+<br>
+
+#### *<a id="strides">Using strides</a>*
+
+Python
+
+    >>> import numpy
+    >>> a = numpy.arange(6).reshape((3, 2))
+    >>> a.strides
+        (16, 8)
+  
+<br>
+Javascript with PyExtJS
+
+    > a = numpy.arange(6).reshape([3, 2]);
+    [[0, 1], [2, 3], [4, 5]]
+    > a.strides;
+      [2, 1]
+    # Very important: in Javascript the element has 1 byte
+      
+<br>
+
+#### *<a id="dtype">Using dtype</a>*
+
+Python
+
+    >>> import numpy
+    >>> a = numpy.arange(6).reshape((3, 2))
+    >>> a.dtype
+        dtype('int64')
+  
+<br>
+Javascript with PyExtJS
+
+    > a = numpy.arange(6).reshape([3, 2]);
+    [[0, 1], [2, 3], [4, 5]]
+    > a.dtype;
+      "Number"
+      
+<br>
+
+#### *<a id="ravel">Using ravel</a>*
+
+Python
+
+    >>> import numpy
+    >>> a = numpy.arange(6).reshape((3, 2))
+    >>> a.ravel()
+        array([0, 1, 2, 3, 4, 5])
+  
+<br>
+Javascript with PyExtJS
+
+    > a = numpy.arange(6).reshape([3, 2]);
+      [[0, 1], [2, 3], [4, 5]]
+    > a.ravel();
+      [0, 1, 2, 3, 4, 5]
+      
+<br>
+
+#### *<a id="transpose">Using T or transpose</a>*
+
+Python
+
+    >>> import numpy
+    >>> a = numpy.arange(6).reshape((3, 2))
+    >>> a.T
+        array([[0, 2, 4],
+               [1, 3, 5]])
+    >>> a.transpose()
+        array([[0, 2, 4],
+               [1, 3, 5]])
+  
+<br>
+Javascript with PyExtJS
+
+    > a = numpy.arange(6).reshape([3, 2]);
+      [[0, 1], [2, 3], [4, 5]]
+    > a.T;
+      [[0, 2, 4], [1, 3, 5]]
+    > a.transpose();
+      [[0, 2, 4], [1, 3, 5]]
       
 <br>
 
@@ -267,6 +375,28 @@ Javascript with PyExtJS
       [0, 0, 0, 0, 0]
     > numpy.zeros([3, 2]);
       [[0, 0],[0, 0],[0, 0]]
+
+<br>
+
+#### *<a id="ones">Using ones</a>*
+
+Python
+
+    >>> import numpy
+    >>> numpy.ones(5)
+        array([ 1.,  1.,  1.,  1.,  1.])
+    >>> numpy.ones((3, 2))
+        array([[ 1.,  1.],
+              [ 1.,  1.],
+              [ 1.,  1.]])
+  
+<br>
+Javascript with PyExtJS
+
+    > numpy.ones(5);
+      [1, 1, 1, 1, 1]
+    > numpy.ones([3, 2]);
+      [[1, 1],[1, 1],[1, 1]]
 
 <br>
 

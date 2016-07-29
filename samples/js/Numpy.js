@@ -140,6 +140,30 @@ numpy.zeros = function numpy$zeros(cols, rows) {
             return ret;
     }
 }
+numpy.ones = function numpy$ones(shape) {
+    var type = Type.getInstanceType(shape).get_name();
+    switch (type) {
+        case 'Array':
+            var shapeArray = shape;
+            var shapeObjectArray = shape;
+            var mult = 1;
+            for (var i = 0; i < shapeArray.length; i++) {
+                mult *= shapeArray[i];
+            }
+            var retArray = new Array(mult);
+            for (var i = 0; i < mult; i++) {
+                retArray[i] = 1;
+            }
+            return numpy._grouparray(numpy._inversearray(shapeObjectArray), retArray);
+        default:
+            var input = shape;
+            var ret = new Array(input);
+            for (var i = 0; i < input; i++) {
+                ret[i] = 1;
+            }
+            return ret;
+    }
+}
 numpy.polyfit = function numpy$polyfit(x, y, deg) {
     var data = new Array(x.length);
     for (var i = 0; i < x.length; i++) {
@@ -175,6 +199,30 @@ numpy.reshape = function numpy$reshape(a, shape) {
     }
     var fixedshape = numpy._inversearray(shape);
     return numpy._grouparray(fixedshape, plain);
+}
+numpy.ravel = function numpy$ravel() {
+    var array = this;
+    var objlist = [];
+    numpy._plainarray(objlist, array);
+    var plain = new Array(objlist.length);
+    for (var i = 0; i < objlist.length; i++) {
+        plain[i] = objlist[i];
+    }
+    return plain;
+}
+numpy.gettype = function numpy$gettype(obj) {
+    var paramType = Type.getInstanceType(obj).get_name();
+    switch (paramType) {
+        case 'Number':
+            return paramType;
+        case 'Array':
+            var array = obj;
+            var objlist = [];
+            numpy._plainarray(objlist, array);
+            return Type.getInstanceType(objlist[0]).get_name();
+        default:
+            return 'undefined';
+    }
 }
 numpy._inversearray = function numpy$_inversearray(array) {
     var newarray = new Array(array.length);
@@ -257,31 +305,129 @@ numpy.getrandom = function numpy$getrandom(size) {
 }
 
 numpy.registerClass('numpy');
-Array.prototype.size = function numpy$_size(a) {
-    a = this.shape();
+Object.defineProperty(Array.prototype, "size", {
+  get: function () {
+    __$$tmP = this.shape;
 
     var thesize=1;
-    for(var i=0;i<a.length;i++)
-        thesize*=a[i];
+    for(var i=0;i<__$$tmP.length;i++)
+        thesize*=__$$tmP[i];
     return thesize;
-}
-Array.prototype.shape = function numpy$_getshape(a) {
-    a = this;
+  }
+});
+Object.defineProperty(Array.prototype, "shape", {
+  get: function () {
+    __$$tmP = this;
     var dim = [];
     for (;;) {
-        dim.push(a.length);
+        dim.push(__$$tmP.length);
 
-        if (Array.isArray(a[0])) {
-            a = a[0];
+        if (Array.isArray(__$$tmP[0])) {
+            __$$tmP = __$$tmP[0];
         } else {
             break;
         }
     }
     return dim;
-}
+  }
+});
+Object.defineProperty(Array.prototype, "strides", {
+  get: function () {
+    var shp = this.shape;
+    var dim = [];
+    for (var i=1;i<shp.length;i++) {
+        var acum = 1;
+        for(var j=i;j<shp.length;j++) {
+            acum*=shp[j];
+        }
+        dim.push(acum);
+    }
+    dim.push(1);
+    return dim;
+  }
+});
+Object.defineProperty(Array.prototype, "ndim", {
+  get: function () {
+    __$$tmP = this;
+    return __$$tmP.shape.length;
+  }
+});
+Object.defineProperty(Array.prototype, "dtype", {
+  get: function () {
+    return numpy.gettype(this);
+  }
+});
+Object.defineProperty(Array.prototype, "T", {
+  get: function () {
+    return this.transpose();
+  }
+});
+Array.prototype.resize = function numpy$_resize(shape) {
+    a = this;
+    a = numpy.reshape(a,shape);
+    this.clear();
+    for(var i=0;i<a.length;i++)
+        this.push(a[i]);
+    return a;
+};
+Array.prototype.transpose = function numpy$_transpose() {
+  var _data = this.ravel();
+  var _dest = _data.clone();
+
+  var recipient = new Array(this.size);
+  var sh = this.shape.reverse();
+  var dstStride = this.strides.reverse();
+
+  generatelist(recipient,sh);
+  transport(_data,_dest,recipient,dstStride);
+
+  _dest=_dest.reshape(sh);
+  return _dest;
+};
+function generatelist(recipient,sh)
+{
+    var start = new Array(sh.length);
+    var size = sh.length;
+                
+    for(var i=0;i<sh.length;i++){
+        start[i]=0;
+    }
+
+    for(var i=0;i<recipient.length;i++){
+        recipient[i] = new Array(sh.length);
+        for(var j=0;j<sh.length;j++)
+            recipient[i][j] = start[j];
+
+        increment(start,sh);
+    }
+};
+function increment(start,sh){
+    for(var i=sh.length-1;i>=0;i--){
+        if (start[i]<sh[i]-1){
+            start[i]++;
+            return;
+        }
+        start[i]=0;
+    }
+};
+function transport(data,dest,recipient,dstStride)
+{
+    for(var i=0;i<recipient.length;i++){
+        var position;
+        var positionArray = recipient[i];
+        for(var j=0;j<dstStride.length;j++)
+            positionArray[j] = recipient[i][j]*dstStride[j];
+        var position = positionArray.reduce(function(a, b) { return a + b; }, 0);
+        dest[i]=data[position];
+    }
+};
+np = numpy;
 numpy.range = numpy.arange;
 Array.prototype.exp = numpy.exp;
 Array.prototype.reshape = numpy.reshape;
+Array.prototype.ravel = numpy.ravel;
+Array.prototype.dtype = numpy.dtype;
+Number.prototype.dtype = numpy.dtype;
 numpy.random = numpy.getrandom;
 numpy.random.random = numpy.getrandom;
 })();
