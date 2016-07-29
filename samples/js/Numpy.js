@@ -116,7 +116,7 @@ numpy.arange = function numpy$arange(start, stop, step) {
     }
     return opt3;
 }
-numpy.zeros = function numpy$zeros(cols, rows) {
+numpy.zeros = function numpy$zeros(shape) {
     var type = Type.getInstanceType(shape).get_name();
     switch (type) {
         case 'Array':
@@ -388,7 +388,7 @@ function generatelist(recipient,sh)
 {
     var start = new Array(sh.length);
     var size = sh.length;
-                
+
     for(var i=0;i<sh.length;i++){
         start[i]=0;
     }
