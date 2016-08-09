@@ -194,8 +194,15 @@ numpy.getShape = function numpy$getShape(a) {
 }
 numpy.reshape = function numpy$reshape(a, shape) {
     var assign = true;
-    if (shape == null) {
-        shape = Array.toArray(a);
+    if (this.constructor.name !== 'Function') {
+        if (Type.getInstanceType(a).get_name() === 'Array') {
+            shape = Array.toArray(a);
+        }
+        else {
+            if (arguments.length > 0) {
+                shape = Array.toArray(arguments);
+            }
+        }
         a = this;
         assign = false;
     }
@@ -435,6 +442,31 @@ numpy._getMatrixFromArray = function numpy$_getMatrixFromArray(matrix, positions
         response[pos++] = plainarray[i];
     }
     return response;
+}
+numpy._dotMatrix = function numpy$_dotMatrix(a, b) {
+    if (numpy._isAligned(a, b)) {
+        var nDimA = a.ndim;
+        var nDimB = b.ndim;
+        var a_rows = numpy.getShape(a)[0];
+        var a_cols = numpy.getShape(a)[1];
+        var b_rows = numpy.getShape(b)[0];
+        var b_cols = numpy.getShape(b)[1];
+        var c = numpy.zeros([ a_rows, b_cols + 1 ]);
+        var matrixC = numpy.reshape(c, [ a_rows, b_cols ]);
+        for (var ar = 0; ar < a_rows; ar++) {
+            for (var bc = 0; bc < b_cols; bc++) {
+                var value = 0;
+                for (var ac = 0; ac < a_cols; ac++) {
+                    var A_ar_ac = (Array.toArray(a[ar]))[ac];
+                    var B_ac_ar = (Array.toArray(b[ac]))[bc];
+                    value += A_ar_ac * B_ac_ar;
+                }
+                matrixC[ar][bc] = value;
+            }
+        }
+        return matrixC;
+    }
+    return null;
 }
 numpy.concatenate = function numpy$concatenate(pparams) {
     /// <param name="pparams" type="Object">
