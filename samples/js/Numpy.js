@@ -185,20 +185,59 @@ numpy.polyfit = function numpy$polyfit(x, y, deg) {
 numpy.array = function numpy$array(a) {
     return a;
 }
+numpy.getShape = function numpy$getShape(a) {
+    /// <param name="a" type="Array" elementType="Object">
+    /// </param>
+    /// <returns type="Array" elementType="Number" elementInteger="true"></returns>
+    var obj = a.shape;
+    return Array.toArray(obj);
+}
 numpy.reshape = function numpy$reshape(a, shape) {
+    var assign = true;
     if (shape == null) {
-        shape = a;
+        shape = Array.toArray(a);
         a = this;
+        assign = false;
     }
-    var array = a;
+    var array = Array.toArray(a);
     var objlist = [];
     numpy._plainarray(objlist, array);
     var plain = new Array(objlist.length);
     for (var i = 0; i < objlist.length; i++) {
         plain[i] = objlist[i];
     }
-    var fixedshape = numpy._inversearray(shape);
-    return numpy._grouparray(fixedshape, plain);
+    var fixedshape = numpy._inversearray(Array.toArray(shape));
+    var response = numpy._grouparray(Array.toArray(fixedshape), plain);
+    if (assign) {
+        a.clear();
+        for (var i = 0; i < response.length; i++) {
+            a.push(response[i]);
+        }
+    }
+    return response;
+}
+numpy._isAligned = function numpy$_isAligned(a, b) {
+    /// <param name="a" type="Array" elementType="Object">
+    /// </param>
+    /// <param name="b" type="Array" elementType="Object">
+    /// </param>
+    /// <returns type="Boolean"></returns>
+    var A_shape = numpy.getShape(a);
+    var B_shape = numpy.getShape(b);
+    if (A_shape.length !== B_shape.length) {
+        return false;
+    }
+    for (var i = A_shape.length - 1; i > 0; i = i - 2) {
+        if (!i) {
+            if (A_shape[i] !== B_shape[i]) {
+                return false;
+            }
+        }
+        if (A_shape[i] !== B_shape[i - 1]) {
+            return false;
+        }
+    }
+    return true;
 }
 numpy.ravel = function numpy$ravel() {
     var array = this;
@@ -302,6 +341,120 @@ numpy.getrandom = function numpy$getrandom(size) {
             break;
     }
     return 0;
+}
+numpy.dot = function numpy$dot(a, b) {
+    if (Type.getInstanceType(a).get_name() === 'Number' && Type.getInstanceType(b).get_name() === 'Array') {
+        var b_ndim = numpy.getShape(b).length;
+        if (b_ndim === 2) {
+            var b_rows = numpy.getShape(b)[0];
+            var b_cols = numpy.getShape(b)[1];
+            var result = numpy.ones([ b_rows, b_cols ]);
+            for (var br = 0; br < b_rows; br++) {
+                for (var bc = 0; bc < b_cols; bc++) {
+                    result[br][bc] = ((Array.toArray((b)[br]))[bc]) * a;
+                }
+            }
+            return result;
+        }
+    }
+    if (Type.getInstanceType(a).get_name() === 'Array' && Type.getInstanceType(b).get_name() === 'Number') {
+        var a_ndim = numpy.getShape(a).length;
+        if (a_ndim === 2) {
+            var a_rows = numpy.getShape(a)[0];
+            var a_cols = numpy.getShape(a)[1];
+            var result = numpy.ones([ a_rows, a_cols ]);
+            for (var ar = 0; ar < a_rows; ar++) {
+                for (var ac = 0; ac < a_cols; ac++) {
+                    result[ar][ac] = ((Array.toArray((a)[ar]))[ac]) * b;
+                }
+            }
+            return result;
+        }
+    }
+    if (Type.getInstanceType(a).get_name() === 'Array' && Type.getInstanceType(b).get_name() === 'Array') {
+        var a_ndim = numpy.getShape(a).length;
+        var b_ndim = numpy.getShape(b).length;
+        if ((a_ndim === 2) && (b_ndim === 2)) {
+            return numpy._dotMatrix(a, b);
+        }
+        else {
+            return null;
+        }
+    }
+    return null;
+}
+numpy._tupleCombination = function numpy$_tupleCombination(array) {
+    var cardinality = 1;
+    for (var i = 0; i < array.length; i++) {
+        cardinality *= array[i];
+    }
+    var result = new Array(cardinality);
+    for (var i = 0; i < result.length; i++) {
+        result[i] = new Array(array.length);
+    }
+    for (var j = array.length - 1; j >= 0; j--) {
+        var each = 1;
+        for (var e = j + 1; e < array.length; e++) {
+            each *= array[e];
+        }
+        var step = 0;
+        var val = 0;
+        for (var i = 0; i < cardinality; i++) {
+            step++;
+            var arrayValue = (Type.safeCast(result[i], Object));
+            arrayValue[j] = val;
+            if (step === each) {
+                val = (val + 1) % array[j];
+                step = 0;
+            }
+        }
+    }
+    return result;
+}
+numpy._getMatrixFromArray = function numpy$_getMatrixFromArray(matrix, positions, shape, numElements) {
+    var m_shape = numpy.getShape(matrix);
+    var Nx = m_shape[0];
+    var Ny = m_shape[1];
+    var plainarray = matrix.ravel();
+    var response = numpy.zeros(numElements);
+    var value = 0;
+    for (var i = 0; i < positions.length; i++) {
+        var tmp = 1;
+        for (var j = i + 1; j < shape.length; j++) {
+            tmp *= shape[j];
+        }
+        tmp *= numElements * positions[i];
+        value += tmp;
+    }
+    var pos = 0;
+    for (var i = value; i < numElements + value; i++) {
+        response[pos++] = plainarray[i];
+    }
+    return response;
+}
+numpy.concatenate = function numpy$concatenate(pparams) {
+    /// <param name="pparams" type="Object">
+    /// </param>
+    /// <returns type="Array" elementType="Object"></returns>
+    if (arguments.length > 1) {
+        var join = [];
+        for (var i = 0; i < arguments.length; i++) {
+            var obj = arguments[i];
+            switch (Type.getInstanceType(obj).get_name()) {
+                case 'Array':
+                    var objArray = obj;
+                    for (var j = 0; j < objArray.length; j++) {
+                        join.add(objArray[j]);
+                    }
+                    break;
+                default:
+                    join.add(obj);
+                    break;
+            }
+        }
+        return join;
+    }
+    return pparams;
 }
 
 numpy.registerClass('numpy');
