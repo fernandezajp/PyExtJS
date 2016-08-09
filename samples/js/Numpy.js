@@ -343,6 +343,10 @@ numpy.getrandom = function numpy$getrandom(size) {
     return 0;
 }
 numpy.dot = function numpy$dot(a, b) {
+    if (b == null) {
+        b = a;
+        a = this;
+    }
     if (Type.getInstanceType(a).get_name() === 'Number' && Type.getInstanceType(b).get_name() === 'Array') {
         var b_ndim = numpy.getShape(b).length;
         if (b_ndim === 2) {
@@ -575,12 +579,15 @@ function transport(data,dest,recipient,dstStride)
     }
 };
 np = numpy;
+numpy.pi = Math.PI;
 numpy.range = numpy.arange;
 Array.prototype.exp = numpy.exp;
 Array.prototype.reshape = numpy.reshape;
 Array.prototype.ravel = numpy.ravel;
 Array.prototype.dtype = numpy.dtype;
 Number.prototype.dtype = numpy.dtype;
+Array.prototype.dot = numpy.dot;
 numpy.random = numpy.getrandom;
 numpy.random.random = numpy.getrandom;
+ndarray = Array;
 })();

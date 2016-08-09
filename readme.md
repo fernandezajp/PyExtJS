@@ -9,34 +9,35 @@ PyExtJS
 - <a href="#sourcecode">Latest source code</a>
 - <a href="#bugs">Bug reports</a>
 - <a href="#gettingstarted">Getting Started</a>
-  * <a href="#numpy">numpy</a>
+	* <a href="#numpy">numpy</a>
     * <a href="#array">array</a>
-    * <a href="#linspace">linspace</a>
-    * <a href="#logspace">logspace</a>
-    * <a href="#exp">exp</a>
-    * <a href="#arange">arange</a>
-    * <a href="#power">power</a>
-    * <a href="#reshape">reshape</a>
-    * <a href="#shape">shape</a>
-    * <a href="#size">size</a>
-    * <a href="#ndim">ndim</a>
-    * <a href="#strides">strides</a>
-    * <a href="#dtype">dtype</a>
-    * <a href="#ravel">ravel</a>
-    * <a href="#transpose">T / transpose</a>
-    * <a href="#zeros">zeros</a>
-    * <a href="#ones">ones</a>
-    * <a href="#random">random</a>
-    * <a href="#polyfit">polyfit</a>
-  * <a href="#scipy">scipy</a>
+		* <a href="#linspace">linspace</a>
+		* <a href="#logspace">logspace</a>
+		* <a href="#exp">exp</a>
+		* <a href="#arange">arange</a>
+		* <a href="#power">power</a>
+		* <a href="#reshape">reshape</a>
+		* <a href="#shape">shape</a>
+		* <a href="#size">size</a>
+		* <a href="#ndim">ndim</a>
+		* <a href="#strides">strides</a>
+		* <a href="#dtype">dtype</a>
+		* <a href="#ravel">ravel</a>
+		* <a href="#transpose">T / transpose</a>
+    * <a href="#dot">dot</a>
+		* <a href="#zeros">zeros</a>
+		* <a href="#ones">ones</a>
+		* <a href="#random">random</a>
+		* <a href="#polyfit">polyfit</a>
+	* <a href="#scipy">scipy</a>
     * <a href="#interpolate">interpolate</a>
     * <a href="#linregress">linregress</a>
 
 ## <a id="what-is-pyextjs">What is PyExtJs?</a>
 
-Python Extension Packages in Javascript is open-source implementation of some common libraries used 
+Python Extension Packages in Javascript is open-source implementation of some common libraries used
 in the scientific python programming.  
-The main goal of this project is to improve migration of 
+The main goal of this project is to improve migration of
 python language to javascript.
 
 ## <a id="installation">Installation</a>
@@ -87,7 +88,7 @@ Python
     >>> import numpy
     >>> numpy.array([[1,2],[3,4]])
         array([[1, 2], [3, 4]])
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -103,7 +104,7 @@ Python
     >>> import numpy
     >>> numpy.linspace(2.0, 3.0, 5)
         array([ 2.  ,  2.25,  2.5 ,  2.75,  3.  ])
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -119,7 +120,7 @@ Python
     >>> import numpy
     >>> numpy.logspace(2.0, 3.0, 5)
         array([100.,177.827941,316.22776602,562.34132519,1000.])
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -137,7 +138,7 @@ Python
         11.023176380641601
     >>> numpy.exp([2.4, 3.1])
         array([ 11.02317638,  22.19795128])
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -159,7 +160,7 @@ Python
         array([3, 4, 5, 6])
     >>> numpy.arange(3,7,2)
         array([3, 5])
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -182,7 +183,7 @@ Python
     >>> x2 = [1.0, 2.0, 3.0, 3.0, 2.0, 1.0]
     >>> np.power(x1, x2)
         array([  0.,   1.,   8.,  27.,  16.,   5.])
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -202,18 +203,20 @@ Javascript with PyExtJS
 Python
 
     >>> import numpy
-    >>> a = numpy.arange(6).reshape((3, 2))
+    >>> a = numpy.arange(6).reshape([3, 2])
     >>> a
         array([[0, 1],
-             [2, 3],
+               [2, 3],
                [4, 5]])
-  
+
 <br>
 Javascript with PyExtJS
 
     > a = numpy.arange(6).reshape([3, 2]);
     [[0, 1], [2, 3], [4, 5]]
-      
+    > a = numpy.arange(6).reshape(3, 2);
+    [[0, 1], [2, 3], [4, 5]]
+
 <br>
 
 #### *<a id="shape">Using shape</a>*
@@ -224,7 +227,7 @@ Python
     >>> a = numpy.arange(6).reshape((3, 2))
     >>> a.shape
         (3, 2)
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -232,7 +235,7 @@ Javascript with PyExtJS
     [[0, 1], [2, 3], [4, 5]]
     > a.shape;
       [3, 2]
-      
+
 <br>
 
 #### *<a id="size">Using size</a>*
@@ -243,7 +246,7 @@ Python
     >>> a = numpy.arange(6).reshape((3, 2))
     >>> a.size
         6
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -251,7 +254,7 @@ Javascript with PyExtJS
     [[0, 1], [2, 3], [4, 5]]
     > a.size;
       6
-      
+
 <br>
 
 #### *<a id="ndim">Using ndim</a>*
@@ -262,7 +265,7 @@ Python
     >>> a = numpy.arange(6).reshape((3, 2))
     >>> a.ndim
         2
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -270,7 +273,7 @@ Javascript with PyExtJS
     [[0, 1], [2, 3], [4, 5]]
     > a.ndim;
       2
-      
+
 <br>
 
 #### *<a id="strides">Using strides</a>*
@@ -281,7 +284,7 @@ Python
     >>> a = numpy.arange(6).reshape((3, 2))
     >>> a.strides
         (16, 8)
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -290,7 +293,7 @@ Javascript with PyExtJS
     > a.strides;
       [2, 1]
     # Very important: in Javascript the element has 1 byte
-      
+
 <br>
 
 #### *<a id="dtype">Using dtype</a>*
@@ -301,7 +304,7 @@ Python
     >>> a = numpy.arange(6).reshape((3, 2))
     >>> a.dtype
         dtype('int64')
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -309,7 +312,7 @@ Javascript with PyExtJS
     [[0, 1], [2, 3], [4, 5]]
     > a.dtype;
       "Number"
-      
+
 <br>
 
 #### *<a id="ravel">Using ravel</a>*
@@ -320,7 +323,7 @@ Python
     >>> a = numpy.arange(6).reshape((3, 2))
     >>> a.ravel()
         array([0, 1, 2, 3, 4, 5])
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -328,7 +331,7 @@ Javascript with PyExtJS
       [[0, 1], [2, 3], [4, 5]]
     > a.ravel();
       [0, 1, 2, 3, 4, 5]
-      
+
 <br>
 
 #### *<a id="transpose">Using T or transpose</a>*
@@ -343,7 +346,7 @@ Python
     >>> a.transpose()
         array([[0, 2, 4],
                [1, 3, 5]])
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -353,7 +356,31 @@ Javascript with PyExtJS
       [[0, 2, 4], [1, 3, 5]]
     > a.transpose();
       [[0, 2, 4], [1, 3, 5]]
-      
+
+<br>
+
+#### *<a id="dot">Using dot</a>*
+
+Python
+
+    >>> import numpy
+    >>> a = numpy.arange(6).reshape(3, 2)
+    >>> b = numpy.arange(6,12).reshape(2, 3)
+    >>> a.dot(b)
+        array([[ 9, 10, 11],
+               [39, 44, 49],
+               [69, 78, 87]])
+
+<br>
+Javascript with PyExtJS
+
+    > a = numpy.arange(6).reshape(3, 2);
+      [[0, 1], [2, 3], [4, 5]]
+    > b = numpy.arange(6,12).reshape(2, 3);
+      [[6, 7, 8], [9, 10, 11]]
+    > a.dot(b);
+      [[9, 10, 11], [39, 44, 49], [69, 78, 87]]
+
 <br>
 
 #### *<a id="zeros">Using zeros</a>*
@@ -367,7 +394,7 @@ Python
         array([[ 0.,  0.],
               [ 0.,  0.],
               [ 0.,  0.]])
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -389,7 +416,7 @@ Python
         array([[ 1.,  1.],
               [ 1.,  1.],
               [ 1.,  1.]])
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -412,7 +439,7 @@ Python
     >>> numpy.random.random([2,2])
         array([[ 0.51655267,  0.57323634],
                [ 0.82552349,  0.10818737]])
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -434,7 +461,7 @@ Python
     >>> y = numpy.array([0.0, 0.8, 0.9, 0.1, -0.8, -1.0])
     >>> numpy.polyfit(x, y, 3)
         array([ 0.08703704, -0.81349206,  1.69312169, -0.03968254])
-  
+
 <br>
 Javascript with PyExtJS
 
@@ -444,7 +471,7 @@ Javascript with PyExtJS
       [0, 0.8, 0.9, 0.1, -0.8, -1]
     > numpy.polyfit(x, y, 3);
       [0.0870370370370341, -0.8134920634920405, 1.6931216931216477, -0.039682539682528106]
-    
+
 <br>
 
 ### *<a id="scipy">scipy</a>*
@@ -511,7 +538,7 @@ Javascript with PyExtJS
       -0.7281879194630861
     > Stats.get_intercept();
       0.8486577181208048
-    
+
 <br>
 
 <a href="#performance">Performance</a>
@@ -537,7 +564,7 @@ The python Code:
         print microsecs * 1000
 
     test()
-    
+
 <br>
 The Javascript Code:
 
@@ -552,9 +579,9 @@ The Javascript Code:
         var diff = end - start;
         alert(diff);
     }
-    
+
     test();
-    
+
 <br>
 
 Python: 1604 milliseconds  
