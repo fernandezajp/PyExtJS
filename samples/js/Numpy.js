@@ -394,6 +394,20 @@ numpy.dot = function numpy$dot(a, b) {
     }
     return null;
 }
+numpy.add = function numpy$add(a, b) {
+    if (b == null) {
+        b = a;
+        a = this;
+    }
+    if (Type.getInstanceType(a).get_name() === 'Array' && Type.getInstanceType(b).get_name() === 'Array') {
+        var a_ndim = numpy.getShape(a).length;
+        var b_ndim = numpy.getShape(b).length;
+        if ((a_ndim === 2) && (b_ndim === 2)) {
+            return numpy._addMatrix(a, b);
+        }
+    }
+    return null;
+}
 numpy._tupleCombination = function numpy$_tupleCombination(array) {
     var cardinality = 1;
     for (var i = 0; i < array.length; i++) {
@@ -468,10 +482,28 @@ numpy._dotMatrix = function numpy$_dotMatrix(a, b) {
     }
     return null;
 }
+numpy._addMatrix = function numpy$_addMatrix(a, b) {
+    if (numpy._isAligned(a, b)) {
+        var nDimA = a.ndim;
+        var nDimB = b.ndim;
+        var a_rows = numpy.getShape(a)[0];
+        var a_cols = numpy.getShape(a)[1];
+        var b_rows = numpy.getShape(b)[0];
+        var b_cols = numpy.getShape(b)[1];
+        var zeros = numpy.zeros([ a_rows, b_cols + 1 ]);
+        var matrixC = numpy.reshape(zeros, [ a_rows, b_cols ]);
+        for (var r = 0; r < a_rows; r++) {
+            for (var c = 0; c < b_cols; c++) {
+                var A_ar_ac = (Array.toArray(a[r]))[c];
+                var B_br_bc = (Array.toArray(b[r]))[c];
+                matrixC[r][c] = A_ar_ac + B_br_bc;
+            }
+        }
+        return matrixC;
+    }
+    return null;
+}
 numpy.concatenate = function numpy$concatenate(pparams) {
-    /// <param name="pparams" type="Object">
-    /// </param>
-    /// <returns type="Array" elementType="Object"></returns>
     if (arguments.length > 1) {
         var join = [];
         for (var i = 0; i < arguments.length; i++) {
@@ -491,6 +523,216 @@ numpy.concatenate = function numpy$concatenate(pparams) {
         return join;
     }
     return pparams;
+}
+numpy.sin = function numpy$sin(value) {
+    var type = Type.getInstanceType(value).get_name();
+    switch (type) {
+        case 'Array':
+            var shape = numpy.getShape(value);
+            var data = value.ravel();
+            for (var i = 0; i < data.length; i++) {
+                data[i] = Math.sin(data[i]);
+            }
+            return numpy.reshape(data, shape);
+        default:
+            return Math.sin(value);
+    }
+}
+numpy.cos = function numpy$cos(value) {
+    var type = Type.getInstanceType(value).get_name();
+    switch (type) {
+        case 'Array':
+            var shape = numpy.getShape(value);
+            var data = value.ravel();
+            for (var i = 0; i < data.length; i++) {
+                data[i] = Math.cos(data[i]);
+            }
+            return numpy.reshape(data, shape);
+        default:
+            return Math.cos(value);
+    }
+}
+numpy.tan = function numpy$tan(value) {
+    var type = Type.getInstanceType(value).get_name();
+    switch (type) {
+        case 'Array':
+            var shape = numpy.getShape(value);
+            var data = value.ravel();
+            for (var i = 0; i < data.length; i++) {
+                data[i] = Math.tan(data[i]);
+            }
+            return numpy.reshape(data, shape);
+        default:
+            return Math.tan(value);
+    }
+}
+numpy.arcsin = function numpy$arcsin(value) {
+    var type = Type.getInstanceType(value).get_name();
+    switch (type) {
+        case 'Array':
+            var shape = numpy.getShape(value);
+            var data = value.ravel();
+            for (var i = 0; i < data.length; i++) {
+                data[i] = Math.asin(data[i]);
+            }
+            return numpy.reshape(data, shape);
+        default:
+            return Math.asin(value);
+    }
+}
+numpy.arccos = function numpy$arccos(value) {
+    var type = Type.getInstanceType(value).get_name();
+    switch (type) {
+        case 'Array':
+            var shape = numpy.getShape(value);
+            var data = value.ravel();
+            for (var i = 0; i < data.length; i++) {
+                data[i] = Math.acos(data[i]);
+            }
+            return numpy.reshape(data, shape);
+        default:
+            return Math.acos(value);
+    }
+}
+numpy.arctan = function numpy$arctan(value) {
+    var type = Type.getInstanceType(value).get_name();
+    switch (type) {
+        case 'Array':
+            var shape = numpy.getShape(value);
+            var data = value.ravel();
+            for (var i = 0; i < data.length; i++) {
+                data[i] = Math.atan(data[i]);
+            }
+            return numpy.reshape(data, shape);
+        default:
+            return Math.atan(value);
+    }
+}
+numpy.hypot = function numpy$hypot(x, y) {
+    var xtype = Type.getInstanceType(x).get_name();
+    var ytype = Type.getInstanceType(y).get_name();
+    if ((xtype === 'Number') && (ytype === 'Number')) {
+        return Math.sqrt((x) * (x) + (y) * (y));
+    }
+    if ((xtype === 'Number') && (ytype === 'Array')) {
+        var yshape = numpy.getShape(y);
+        var data = y.ravel();
+        for (var i = 0; i < data.length; i++) {
+            data[i] = Math.sqrt((x) * (x) + (data[i]) * (data[i]));
+        }
+        return numpy.reshape(data, yshape);
+    }
+    if ((xtype === 'Array') && (ytype === 'Number')) {
+        var xshape = numpy.getShape(x);
+        var data = x.ravel();
+        for (var i = 0; i < data.length; i++) {
+            data[i] = Math.sqrt((data[i]) * (data[i]) + (y) * (y));
+        }
+        return numpy.reshape(data, xshape);
+    }
+    if ((xtype === 'Array') && (ytype === 'Array')) {
+        var xshape = numpy.getShape(x);
+        var xdata = x.ravel();
+        var yshape = numpy.getShape(y);
+        var ydata = y.ravel();
+        var data = numpy.arange(xdata.length);
+        for (var i = 0; i < xdata.length; i++) {
+            data[i] = Math.sqrt((xdata[i]) * (xdata[i]) + (ydata[i]) * (ydata[i]));
+        }
+        return numpy.reshape(Array.toArray(data), xshape);
+    }
+    return null;
+}
+numpy.arctan2 = function numpy$arctan2(x, y) {
+    var xtype = Type.getInstanceType(x).get_name();
+    var ytype = Type.getInstanceType(y).get_name();
+    if ((xtype === 'Number') && (ytype === 'Number')) {
+        return Math.atan2(x, y);
+    }
+    if ((xtype === 'Number') && (ytype === 'Array')) {
+        var yshape = numpy.getShape(y);
+        var data = y.ravel();
+        for (var i = 0; i < data.length; i++) {
+            data[i] = Math.atan2(x, data[i]);
+        }
+        return numpy.reshape(data, yshape);
+    }
+    if ((xtype === 'Array') && (ytype === 'Number')) {
+        var xshape = numpy.getShape(x);
+        var data = x.ravel();
+        for (var i = 0; i < data.length; i++) {
+            data[i] = Math.atan2(data[i], y);
+        }
+        return numpy.reshape(data, xshape);
+    }
+    if ((xtype === 'Array') && (ytype === 'Array')) {
+        var xshape = numpy.getShape(x);
+        var xdata = x.ravel();
+        var yshape = numpy.getShape(y);
+        var ydata = y.ravel();
+        var data = numpy.arange(xdata.length);
+        for (var i = 0; i < xdata.length; i++) {
+            data[i] = Math.atan2(xdata[i], ydata[i]);
+        }
+        return numpy.reshape(Array.toArray(data), xshape);
+    }
+    return null;
+}
+numpy.degrees = function numpy$degrees(value) {
+    var type = Type.getInstanceType(value).get_name();
+    switch (type) {
+        case 'Array':
+            var shape = numpy.getShape(value);
+            var data = value.ravel();
+            for (var i = 0; i < data.length; i++) {
+                data[i] = (data[i]) * (180 / Math.PI);
+            }
+            return numpy.reshape(data, shape);
+        default:
+            return (value) * (180 / Math.PI);
+    }
+}
+numpy.radians = function numpy$radians(value) {
+    var type = Type.getInstanceType(value).get_name();
+    switch (type) {
+        case 'Array':
+            var shape = numpy.getShape(value);
+            var data = value.ravel();
+            for (var i = 0; i < data.length; i++) {
+                data[i] = Math.PI * (data[i]) / 180;
+            }
+            return numpy.reshape(data, shape);
+        default:
+            return (value) * (180 / Math.PI);
+    }
+}
+numpy.rad2deg = function numpy$rad2deg(value) {
+    var type = Type.getInstanceType(value).get_name();
+    switch (type) {
+        case 'Array':
+            var shape = numpy.getShape(value);
+            var data = value.ravel();
+            for (var i = 0; i < data.length; i++) {
+                data[i] = (data[i]) * (180 / Math.PI);
+            }
+            return numpy.reshape(data, shape);
+        default:
+            return (value) * (180 / Math.PI);
+    }
+}
+numpy.deg2rad = function numpy$deg2rad(value) {
+    var type = Type.getInstanceType(value).get_name();
+    switch (type) {
+        case 'Array':
+            var shape = numpy.getShape(value);
+            var data = value.ravel();
+            for (var i = 0; i < data.length; i++) {
+                data[i] = Math.PI * (data[i]) / 180;
+            }
+            return numpy.reshape(data, shape);
+        default:
+            return (value) * (180 / Math.PI);
+    }
 }
 
 numpy.registerClass('numpy');
