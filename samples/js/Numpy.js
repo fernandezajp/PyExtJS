@@ -247,7 +247,13 @@ numpy._isAligned = function numpy$_isAligned(a, b) {
     return true;
 }
 numpy.ravel = function numpy$ravel() {
-    var array = this;
+    var array = null;
+    if (a == null) {
+        array = this;
+    }
+    else {
+        array = a;
+    }
     var objlist = [];
     numpy._plainarray(objlist, array);
     var plain = new Array(objlist.length);
@@ -814,6 +820,9 @@ Array.prototype.transpose = function numpy$_transpose() {
 
   _dest=_dest.reshape(sh);
   return _dest;
+};
+Array.prototype.flatten = function numpy$_flatten() {
+  return this.ravel();
 };
 function generatelist(recipient,sh)
 {

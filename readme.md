@@ -10,7 +10,7 @@ PyExtJS
 - <a href="#bugs">Bug reports</a>
 - <a href="#gettingstarted">Getting Started</a>
 	* <a href="#numpy">numpy</a>
-    * <a href="#array">array</a>
+		*	<a href="#array">array</a>
 		* <a href="#linspace">linspace</a>
 		* <a href="#logspace">logspace</a>
 		* <a href="#exp">exp</a>
