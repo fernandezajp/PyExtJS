@@ -24,7 +24,7 @@ PyExtJS
 		* <a href="#dtype">dtype</a>
 		* <a href="#ravel">ravel</a>
 		* <a href="#transpose">T / transpose</a>
-    * <a href="#dot">dot</a>
+		* <a href="#dot">dot</a>
 		* <a href="#zeros">zeros</a>
 		* <a href="#ones">ones</a>
 		* <a href="#random">random</a>
@@ -40,6 +40,12 @@ in the scientific python programming.
 The main goal of this project is to improve migration of
 python language to javascript.
 
+## License
+
+Copyright 2016 Alvaro Fernandez  
+
+License: MIT/X11  
+  
 ## <a id="installation">Installation</a>
 
 Just include the following libraries in your html.
@@ -198,24 +204,6 @@ Javascript with PyExtJS
 
 <br>
 
-#### *<a id="reshape">Using reshape</a>*
-
-Python
-
-    >>> import numpy
-    >>> a = numpy.arange(6).reshape([3, 2])
-    >>> a
-        array([[0, 1],
-               [2, 3],
-               [4, 5]])
-
-<br>
-Javascript with PyExtJS
-
-    > a = numpy.arange(6).reshape([3, 2]);
-    [[0, 1], [2, 3], [4, 5]]
-    > a = numpy.arange(6).reshape(3, 2);
-    [[0, 1], [2, 3], [4, 5]]
 
 <br>
 
