@@ -9,6 +9,9 @@ PyExtJS
 - <a href="#sourcecode">Latest source code</a>
 - <a href="#bugs">Bug reports</a>
 - <a href="https://github.com/fernandezajp/PyExtJS/wiki">Wiki</a>
+	* <a href="https://github.com/fernandezajp/PyExtJS/wiki/Array-creation-routines">Array creation routines</a>
+	* <a href="https://github.com/fernandezajp/PyExtJS/wiki/Array-manipulation-routines">Array manipulation routines</a>
+	* <a href="https://github.com/fernandezajp/PyExtJS/wiki/Mathematical-functions">Mathematical functions</a>
 - <a href="#performance">Performance</a>
 
 ## <a id="what-is-pyextjs">What is PyExtJs?</a>
