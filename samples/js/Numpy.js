@@ -246,7 +246,7 @@ numpy._isAligned = function numpy$_isAligned(a, b) {
     }
     return true;
 }
-numpy.ravel = function numpy$ravel() {
+numpy.ravel = function numpy$ravel(a) {
     var array = null;
     if (a == null) {
         array = this;
