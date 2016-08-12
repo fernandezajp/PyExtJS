@@ -8,7 +8,7 @@ PyExtJS
 - <a href="#installation">Installation</a>
 - <a href="#sourcecode">Latest source code</a>
 - <a href="#bugs">Bug reports</a>
-- <a href="./Wiki">Wiki</a>
+- <a href="https://github.com/fernandezajp/PyExtJS/wiki">Wiki</a>
 - <a href="#performance">Performance</a>
 
 ## <a id="what-is-pyextjs">What is PyExtJs?</a>
@@ -45,7 +45,7 @@ The latest development version of Scipy's sources are always available at:
 To search for bugs or report them, please use the Scipy Bug Tracker at:
 
 > [https://github.com/fernandezajp/PyExtJs/issues](https://github.com/fernandezajp/PyExtJs/issues)
-  
+
 ##<a href="#performance">Performance</a>
 --------------------------------------
 
