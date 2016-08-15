@@ -31,13 +31,15 @@ License: MIT/X11
 
 ### on node.js  
 
-		npm install PyExtJS  
+		$ npm install pyextjs  
 <br>
 
-		require('PyExtJS');
-        numpy.linspace(2.0,3.0,5);
+		> require('pyextjs');
+
+		> numpy.linspace(2.0,3.0,5);
 <br>
-### on the browser
+
+### on the browser  
 
 Just include the following libraries in your html.
 
