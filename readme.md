@@ -29,12 +29,14 @@ License: MIT/X11
 
 ## <a id="installation">Installation</a>
 
-### on node.js
+### on node.js  
 
-		npm install numjs
-	
+		npm install PyExtJS  
+<br>
+
 		require('PyExtJS');
-
+        numpy.linspace(2.0,3.0,5);
+<br>
 ### on the browser
 
 Just include the following libraries in your html.
