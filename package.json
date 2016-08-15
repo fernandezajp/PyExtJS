@@ -3,7 +3,7 @@
    "version": "0.1.0",
    "description": "Python Extension Packages in Javascript (Numpy, Scipy)",
    "main": "src/PyExtJS.js",
-   "_id": "pyextjs@0.1.0"
+   "_id": "pyextjs@0.1.0",
    "keywords": [
        "numpy",
        "scipy",

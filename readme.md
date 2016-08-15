@@ -32,7 +32,7 @@ License: MIT/X11
 ### on node.js
 
 		npm install numjs
-
+	
 		require('PyExtJS');
 
 ### on the browser
