@@ -29,12 +29,34 @@ License: MIT/X11
 
 ## <a id="installation">Installation</a>
 
+### on node.js
+
+		npm install numjs
+
+		require('PyExtJS');
+
+### on the browser
+
 Just include the following libraries in your html.
 
-    <script type="text/javascript" src="ss.js"></script>
-    <script type="text/javascript" src="Numpy.js"></script>
-    <script type="text/javascript" src="PolySolve.js"></script>
-    <script type="text/javascript" src="Scipy.js"></script>
+    <!doctype html>
+    <html>
+      <head>
+        <script type="text/javascript" src="../js/ss.js"></script>
+        <script type="text/javascript" src="../js/Numpy.js"></script>
+        <script type="text/javascript" src="../js/PolySolve.js"></script>
+        <script type="text/javascript" src="../js/Scipy.js"></script>
+        <script type="text/javascript">
+
+           // Use Numpy & Scipy like python in javascript
+
+           function ready() {
+               var ls = numpy.linspace(2.0,3.0,5);
+           }
+
+        </script>
+      </head>
+    </html>
 
 ## <a id="sourcecode">Latest source code</a>  
 
@@ -50,7 +72,6 @@ To search for bugs or report them, please use the Scipy Bug Tracker at:
 > [https://github.com/fernandezajp/PyExtJs/issues](https://github.com/fernandezajp/PyExtJs/issues)
 
 ##<a href="#performance">Performance</a>
---------------------------------------
 
 This is very important, the test was executed in a MacBookPro i5
 
