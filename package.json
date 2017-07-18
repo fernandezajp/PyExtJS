@@ -1,9 +1,9 @@
 {
    "name": "pyextjs",
-   "version": "0.1.2",
+   "version": "0.1.3",
    "description": "Python Extension Packages in Javascript (Numpy, Scipy)",
    "main": "src/PyExtJS.js",
-   "_id": "pyextjs@0.1.2",
+   "_id": "pyextjs@0.1.3",
    "keywords": [
        "numpy",
        "scipy",
