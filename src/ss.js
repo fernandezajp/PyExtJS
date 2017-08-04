@@ -59,6 +59,23 @@ var document = require("jsdom");
   }
 })();
 
+/**
+ * Helper function for adding properties with Object.defineProperty
+ * Copied from example on: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
+ */
+function withValue(value) {
+  var d = withValue.d || (
+    withValue.d = { 
+      enumerable: false,
+      writable: false,
+      configurable: false,
+      value: null
+    }   
+  );  
+  d.value = value;
+  return d;
+}
+
 Object.__typeName = 'Object';
 Object.__baseType = null;
 
@@ -496,15 +513,15 @@ String.prototype.trimStart = function String$trimStart() {
 Array.__typeName = 'Array';
 Array.__interfaces = [ ss.IEnumerable ];
 
-Array.prototype.add = function Array$add(item) {
+Object.defineProperty(Array.prototype, 'add', withValue(function Array$add(item) {
     this[this.length] = item;
-}
+}));
 
-Array.prototype.addRange = function Array$addRange(items) {
+Object.defineProperty(Array.prototype, 'addRange', withValue(function Array$addRange(items) {
     this.push.apply(this, items);
-}
+}));
 
-Array.prototype.aggregate = function Array$aggregate(seed, callback, instance) {
+Object.defineProperty(Array.prototype, 'aggregate', withValue(function Array$aggregate(seed, callback, instance) {
     var length = this.length;
     for (var i = 0; i < length; i++) {
         if (i in this) {
@@ -512,45 +529,45 @@ Array.prototype.aggregate = function Array$aggregate(seed, callback, instance) {
         }
     }
     return seed;
-}
+}));
 
-Array.prototype.clear = function Array$clear() {
+Object.defineProperty(Array.prototype, 'clear', withValue(function Array$clear() {
     this.length = 0;
-}
+}));
 
-Array.prototype.clone = function Array$clone() {
+Object.defineProperty(Array.prototype, 'clone', withValue(function Array$clone() {
     if (this.length === 1) {
         return [this[0]];
     }
     else {
         return Array.apply(null, this);
     }
-}
+}));
 
-Array.prototype.contains = function Array$contains(item) {
+Object.defineProperty(Array.prototype, 'contains', withValue(function Array$contains(item) {
     var index = this.indexOf(item);
     return (index >= 0);
-}
+}));
 
-Array.prototype.dequeue = function Array$dequeue() {
+Object.defineProperty(Array.prototype, 'dequeue', withValue(function Array$dequeue() {
     return this.shift();
-}
+}));
 
-Array.prototype.enqueue = function Array$enqueue(item) {
+Object.defineProperty(Array.prototype, 'enqueue', withValue(function Array$enqueue(item) {
     this._queue = true;
     this.push(item);
-}
+}));
 
-Array.prototype.peek = function Array$peek() {
+Object.defineProperty(Array.prototype, 'peek', withValue(function Array$peek() {
     if (this.length) {
         var index = this._queue ? 0 : this.length - 1;
         return this[index];
     }
     return null;
-}
+}));
 
 if (!Array.prototype.every) {
-    Array.prototype.every = function Array$every(callback, instance) {
+    Object.defineProperty(Array.prototype, 'every', withValue(function Array$every(callback, instance) {
         var length = this.length;
         for (var i = 0; i < length; i++) {
             if (i in this && !callback.call(instance, this[i], i, this)) {
@@ -558,18 +575,18 @@ if (!Array.prototype.every) {
             }
         }
         return true;
-    }
+    }));
 }
 
-Array.prototype.extract = function Array$extract(index, count) {
+Object.defineProperty(Array.prototype, 'extract', withValue(function Array$extract(index, count) {
     if (!count) {
         return this.slice(index);
     }
     return this.slice(index, index + count);
-}
+}));
 
 if (!Array.prototype.filter) {
-    Array.prototype.filter = function Array$filter(callback, instance) {
+    Object.defineProperty(Array.prototype, 'filter', withValue(function Array$filter(callback, instance) {
         var length = this.length;
         var filtered = [];
         for (var i = 0; i < length; i++) {
@@ -581,25 +598,25 @@ if (!Array.prototype.filter) {
             }
         }
         return filtered;
-    }
+    }));
 }
 
 if (!Array.prototype.forEach) {
-    Array.prototype.forEach = function Array$forEach(callback, instance) {
+    Object.defineProperty(Array.prototype, 'forEach', withValue(function Array$forEach(callback, instance) {
         var length = this.length;
         for (var i = 0; i < length; i++) {
             if (i in this) {
                 callback.call(instance, this[i], i, this);
             }
         }
-    }
+    }));
 }
 
-Array.prototype.getEnumerator = function Array$getEnumerator() {
+Object.defineProperty(Array.prototype, 'getEnumerator', withValue(function Array$getEnumerator() {
     return new ss.ArrayEnumerator(this);
-}
+}));
 
-Array.prototype.groupBy = function Array$groupBy(callback, instance) {
+Object.defineProperty(Array.prototype, 'groupBy', withValue(function Array$groupBy(callback, instance) {
     var length = this.length;
     var groups = [];
     var keys = {};
@@ -621,9 +638,9 @@ Array.prototype.groupBy = function Array$groupBy(callback, instance) {
         }
     }
     return groups;
-}
+}));
 
-Array.prototype.index = function Array$index(callback, instance) {
+Object.defineProperty(Array.prototype, 'index', withValue(function Array$index(callback, instance) {
     var length = this.length;
     var items = {};
     for (var i = 0; i < length; i++) {
@@ -636,10 +653,10 @@ Array.prototype.index = function Array$index(callback, instance) {
         }
     }
     return items;
-}
+}));
 
 if (!Array.prototype.indexOf) {
-    Array.prototype.indexOf = function Array$indexOf(item, startIndex) {
+    Object.defineProperty(Array.prototype, 'indexOf', withValue(function Array$indexOf(item, startIndex) {
         startIndex = startIndex || 0;
         var length = this.length;
         if (length) {
@@ -650,14 +667,14 @@ if (!Array.prototype.indexOf) {
             }
         }
         return -1;
-    }
+    }));
 }
 
-Array.prototype.insert = function Array$insert(index, item) {
+Object.defineProperty(Array.prototype, 'insert', withValue(function Array$insert(index, item) {
     this.splice(index, 0, item);
-}
+}));
 
-Array.prototype.insertRange = function Array$insertRange(index, items) {
+Object.defineProperty(Array.prototype, 'insertRange', withValue(function Array$insertRange(index, items) {
     if (index === 0) {
         this.unshift.apply(this, items);
     }
@@ -666,10 +683,10 @@ Array.prototype.insertRange = function Array$insertRange(index, items) {
             this.splice(index + i, 0, items[i]);
         }
     }
-}
+}));
 
 if (!Array.prototype.map) {
-    Array.prototype.map = function Array$map(callback, instance) {
+    Object.defineProperty(Array.prototype, 'map', withValue(function Array$map(callback, instance) {
         var length = this.length;
         var mapped = new Array(length);
         for (var i = 0; i < length; i++) {
@@ -678,32 +695,32 @@ if (!Array.prototype.map) {
             }
         }
         return mapped;
-    }
+    }));
 }
 
 Array.parse = function Array$parse(s) {
     return eval('(' + s + ')');
 }
 
-Array.prototype.remove = function Array$remove(item) {
+Object.defineProperty(Array.prototype, 'remove', withValue(function Array$remove(item) {
     var index = this.indexOf(item);
     if (index >= 0) {
         this.splice(index, 1);
         return true;
     }
     return false;
-}
+}));
 
-Array.prototype.removeAt = function Array$removeAt(index) {
+Object.defineProperty(Array.prototype, 'removeAt', withValue(function Array$removeAt(index) {
     this.splice(index, 1);
-}
+}));
 
-Array.prototype.removeRange = function Array$removeRange(index, count) {
+Object.defineProperty(Array.prototype, 'removeRange', withValue(function Array$removeRange(index, count) {
     return this.splice(index, count);
-}
+}));
 
 if (!Array.prototype.some) {
-    Array.prototype.some = function Array$some(callback, instance) {
+    Object.defineProperty(Array.prototype, 'some', withValue(function Array$some(callback, instance) {
         var length = this.length;
         for (var i = 0; i < length; i++) {
             if (i in this && callback.call(instance, this[i], i, this)) {
@@ -711,7 +728,7 @@ if (!Array.prototype.some) {
             }
         }
         return false;
-    }
+    }));
 }
 
 Array.toArray = function Array$toArray(obj) {

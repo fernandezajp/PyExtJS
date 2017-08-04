@@ -3,6 +3,23 @@
 
 (function() {
 
+/**
+ * Helper function for adding properties with Object.defineProperty
+ * Copied from example on: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
+ */
+function withValue(value) {
+  var d = withValue.d || (
+    withValue.d = { 
+      enumerable: false,
+      writable: true,
+      configurable: false,
+      value: null
+    }
+  );  
+  d.value = value;
+  return d;
+}
+
 window.numpy = function numpy() {
 }
 numpy.linspace = function numpy$linspace(start, stop, num) {
@@ -789,25 +806,20 @@ Object.defineProperty(Array.prototype, "ndim", {
     return __$$tmP.shape.length;
   }
 });
-Object.defineProperty(Array.prototype, "dtype", {
-  get: function () {
-    return numpy.gettype(this);
-  }
-});
 Object.defineProperty(Array.prototype, "T", {
   get: function () {
     return this.transpose();
   }
 });
-Array.prototype.resize = function numpy$_resize(shape) {
+Object.defineProperty(Array.prototype, 'resize', withValue(function numpy$_resize(shape) {
     a = this;
     a = numpy.reshape(a,shape);
     this.clear();
     for(var i=0;i<a.length;i++)
         this.push(a[i]);
     return a;
-};
-Array.prototype.transpose = function numpy$_transpose() {
+}));
+Object.defineProperty(Array.prototype, 'transpose', withValue(function numpy$_transpose() {
   var _data = this.ravel();
   var _dest = _data.clone();
 
@@ -820,10 +832,10 @@ Array.prototype.transpose = function numpy$_transpose() {
 
   _dest=_dest.reshape(sh);
   return _dest;
-};
-Array.prototype.flatten = function numpy$_flatten() {
+}));
+Object.defineProperty(Array.prototype, 'flatten', withValue(function numpy$_flatten() {
   return this.ravel();
-};
+}));
 function generatelist(recipient,sh)
 {
     var start = new Array(sh.length);
@@ -864,12 +876,12 @@ function transport(data,dest,recipient,dstStride)
 np = numpy;
 numpy.pi = Math.PI;
 numpy.range = numpy.arange;
-Array.prototype.exp = numpy.exp;
-Array.prototype.reshape = numpy.reshape;
-Array.prototype.ravel = numpy.ravel;
-Array.prototype.dtype = numpy.dtype;
+Object.defineProperty(Array.prototype, 'exp', withValue(numpy.exp));
+Object.defineProperty(Array.prototype, 'reshape', withValue(numpy.reshape));
+Object.defineProperty(Array.prototype, 'ravel', withValue(numpy.ravel));
+Object.defineProperty(Array.prototype, 'dtype', withValue(numpy.dtype));
 Number.prototype.dtype = numpy.dtype;
-Array.prototype.dot = numpy.dot;
+Object.defineProperty(Array.prototype, 'dot', withValue(numpy.dot));
 numpy.random = numpy.getrandom;
 numpy.random.random = numpy.getrandom;
 ndarray = Array;
