@@ -1,7 +1,5 @@
 (function () {
   var globals = {
-    version: '0.7.4.0',
-
     isUndefined: function (o) {
       return (o === undefined);
     },
@@ -54,6 +52,23 @@
     ss[n] = globals[n];
   }
 })();
+
+/**
+ * Helper function for adding properties with Object.defineProperty
+ * Copied from example on: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
+ */
+ function withValue(value) {
+  var d = withValue.d || (
+    withValue.d = { 
+      enumerable: false,
+      writable: false,
+      configurable: false,
+      value: null
+    }   
+  );  
+  d.value = value;
+  return d;
+}
 
 Object.__typeName = 'Object';
 Object.__baseType = null;
@@ -411,6 +426,10 @@ String.isNullOrEmpty = function String$isNullOrEmpty(s) {
     return !s || !s.length;
 }
 
+String.isNullOrWhiteSpace = function String$isNullOrWhiteSpace(s) {
+    return String.isNullOrEmpty(s) || s.trim() === "";
+}
+
 String.prototype.lastIndexOfAny = function String$lastIndexOfAny(chars, startIndex, count) {
     var length = this.length;
     if (!length) {
@@ -492,15 +511,15 @@ String.prototype.trimStart = function String$trimStart() {
 Array.__typeName = 'Array';
 Array.__interfaces = [ ss.IEnumerable ];
 
-Array.prototype.add = function Array$add(item) {
+Object.defineProperty(Array.prototype, 'add', withValue(function Array$add(item) {
     this[this.length] = item;
-}
+}));
 
-Array.prototype.addRange = function Array$addRange(items) {
+Object.defineProperty(Array.prototype, 'addRange', withValue(function Array$addRange(items) {
     this.push.apply(this, items);
-}
+}));
 
-Array.prototype.aggregate = function Array$aggregate(seed, callback, instance) {
+Object.defineProperty(Array.prototype, 'aggregate', withValue(function Array$aggregate(seed, callback, instance) {
     var length = this.length;
     for (var i = 0; i < length; i++) {
         if (i in this) {
@@ -508,45 +527,45 @@ Array.prototype.aggregate = function Array$aggregate(seed, callback, instance) {
         }
     }
     return seed;
-}
+}));
 
-Array.prototype.clear = function Array$clear() {
+Object.defineProperty(Array.prototype, 'clear', withValue(function Array$clear() {
     this.length = 0;
-}
+}));
 
-Array.prototype.clone = function Array$clone() {
+Object.defineProperty(Array.prototype, 'clone', withValue(function Array$clone() {
     if (this.length === 1) {
         return [this[0]];
     }
     else {
         return Array.apply(null, this);
     }
-}
+}));
 
-Array.prototype.contains = function Array$contains(item) {
+Object.defineProperty(Array.prototype, 'contains', withValue(function Array$contains(item) {
     var index = this.indexOf(item);
     return (index >= 0);
-}
+}));
 
-Array.prototype.dequeue = function Array$dequeue() {
+Object.defineProperty(Array.prototype, 'dequeue', withValue(function Array$dequeue() {
     return this.shift();
-}
+}));
 
-Array.prototype.enqueue = function Array$enqueue(item) {
+Object.defineProperty(Array.prototype, 'enqueue', withValue(function Array$enqueue(item) {
     this._queue = true;
     this.push(item);
-}
+}));
 
-Array.prototype.peek = function Array$peek() {
+Object.defineProperty(Array.prototype, 'peek', withValue(function Array$peek() {
     if (this.length) {
         var index = this._queue ? 0 : this.length - 1;
         return this[index];
     }
     return null;
-}
+}));
 
 if (!Array.prototype.every) {
-    Array.prototype.every = function Array$every(callback, instance) {
+    Object.defineProperty(Array.prototype, 'every', withValue(function Array$every(callback, instance) {
         var length = this.length;
         for (var i = 0; i < length; i++) {
             if (i in this && !callback.call(instance, this[i], i, this)) {
@@ -554,18 +573,18 @@ if (!Array.prototype.every) {
             }
         }
         return true;
-    }
+    }));
 }
 
-Array.prototype.extract = function Array$extract(index, count) {
+Object.defineProperty(Array.prototype, 'extract', withValue(function Array$extract(index, count) {
     if (!count) {
         return this.slice(index);
     }
     return this.slice(index, index + count);
-}
+}));
 
 if (!Array.prototype.filter) {
-    Array.prototype.filter = function Array$filter(callback, instance) {
+    Object.defineProperty(Array.prototype, 'filter', withValue(function Array$filter(callback, instance) {
         var length = this.length;    
         var filtered = [];
         for (var i = 0; i < length; i++) {
@@ -577,25 +596,25 @@ if (!Array.prototype.filter) {
             }
         }
         return filtered;
-    }
+    }));
 }
 
 if (!Array.prototype.forEach) {
-    Array.prototype.forEach = function Array$forEach(callback, instance) {
+    Object.defineProperty(Array.prototype, 'forEach', withValue(function Array$forEach(callback, instance) {
         var length = this.length;
         for (var i = 0; i < length; i++) {
             if (i in this) {
                 callback.call(instance, this[i], i, this);
             }
         }
-    }
+    }));
 }
 
-Array.prototype.getEnumerator = function Array$getEnumerator() {
+Object.defineProperty(Array.prototype, 'getEnumerator', withValue(function Array$getEnumerator() {
     return new ss.ArrayEnumerator(this);
-}
+}));
 
-Array.prototype.groupBy = function Array$groupBy(callback, instance) {
+Object.defineProperty(Array.prototype, 'groupBy', withValue(function Array$groupBy(callback, instance) {
     var length = this.length;
     var groups = [];
     var keys = {};
@@ -617,9 +636,9 @@ Array.prototype.groupBy = function Array$groupBy(callback, instance) {
         }
     }
     return groups;
-}
+}));
 
-Array.prototype.index = function Array$index(callback, instance) {
+Object.defineProperty(Array.prototype, 'index', withValue(function Array$index(callback, instance) {
     var length = this.length;
     var items = {};
     for (var i = 0; i < length; i++) {
@@ -632,10 +651,10 @@ Array.prototype.index = function Array$index(callback, instance) {
         }
     }
     return items;
-}
+}));
 
 if (!Array.prototype.indexOf) {
-    Array.prototype.indexOf = function Array$indexOf(item, startIndex) {
+    Object.defineProperty(Array.prototype, 'indexOf', withValue(function Array$indexOf(item, startIndex) {
         startIndex = startIndex || 0;
         var length = this.length;
         if (length) {
@@ -646,14 +665,14 @@ if (!Array.prototype.indexOf) {
             }
         }
         return -1;
-    }
+    }));
 }
 
-Array.prototype.insert = function Array$insert(index, item) {
+Object.defineProperty(Array.prototype, 'insert', withValue(function Array$insert(index, item) {
     this.splice(index, 0, item);
-}
+}));
 
-Array.prototype.insertRange = function Array$insertRange(index, items) {
+Object.defineProperty(Array.prototype, 'insertRange', withValue(function Array$insertRange(index, items) {
     if (index === 0) {
         this.unshift.apply(this, items);
     }
@@ -662,10 +681,10 @@ Array.prototype.insertRange = function Array$insertRange(index, items) {
             this.splice(index + i, 0, items[i]);
         }
     }
-}
+}));
 
 if (!Array.prototype.map) {
-    Array.prototype.map = function Array$map(callback, instance) {
+    Object.defineProperty(Array.prototype, 'map', withValue(function Array$map(callback, instance) {
         var length = this.length;
         var mapped = new Array(length);
         for (var i = 0; i < length; i++) {
@@ -674,32 +693,32 @@ if (!Array.prototype.map) {
             }
         }
         return mapped;
-    }
+    }));
 }
 
 Array.parse = function Array$parse(s) {
     return eval('(' + s + ')');
 }
 
-Array.prototype.remove = function Array$remove(item) {
+Object.defineProperty(Array.prototype, 'remove', withValue(function Array$remove(item) {
     var index = this.indexOf(item);
     if (index >= 0) {
         this.splice(index, 1);
         return true;
     }
     return false;
-}
+}));
 
-Array.prototype.removeAt = function Array$removeAt(index) {
+Object.defineProperty(Array.prototype, 'removeAt', withValue(function Array$removeAt(index) {
     this.splice(index, 1);
-}
+}));
 
-Array.prototype.removeRange = function Array$removeRange(index, count) {
+Object.defineProperty(Array.prototype, 'removeRange', withValue(function Array$removeRange(index, count) {
     return this.splice(index, count);
-}
+}));
 
 if (!Array.prototype.some) {
-    Array.prototype.some = function Array$some(callback, instance) {
+    Object.defineProperty(Array.prototype, 'some', withValue(function Array$some(callback, instance) {
         var length = this.length;
         for (var i = 0; i < length; i++) {
             if (i in this && callback.call(instance, this[i], i, this)) {
@@ -707,7 +726,7 @@ if (!Array.prototype.some) {
             }
         }
         return false;
-    }
+    }));
 }
 
 Array.toArray = function Array$toArray(obj) {
@@ -930,7 +949,8 @@ Date.prototype._netFormat = function Date$_netFormat(format, useLocale) {
 }
 
 Date.parseDate = function Date$parse(s) {
-    return new Date(Date.parse(s));
+    var t = Date.parse(s);
+    return isNaN(t) ? t : new Date(t);
 }
 
 Error.__typeName = 'Error';
@@ -1715,6 +1735,147 @@ ss.ObservableCollection.prototype = {
   }
 }
 ss.ObservableCollection.registerClass('ObservableCollection', null, ss.IEnumerable);
+
+ss.Task = function(result) {
+  this._continuations = ss.isValue(result) ?
+                          (this.status = 'done', null) :
+                          (this.status = 'pending', []);
+  this.result = result;
+  this.error = null;
+}
+ss.Task.prototype = {
+  get_completed: function() {
+    return this.status != 'pending';
+  },
+  continueWith: function(continuation) {
+    if (this._continuations) {
+      this._continuations.push(continuation);
+    }
+    else {
+      var self = this;
+      setTimeout(function() { continuation(self); }, 0);
+    }
+    return this;
+  },
+  done: function(callback) {
+    return this.continueWith(function(t) {
+      if (t.status == 'done') {
+        callback(t.result);
+      }
+    });
+  },
+  fail: function(callback) {
+    return this.continueWith(function(t) {
+      if (t.status == 'failed') {
+        callback(t.error);
+      }
+    });
+  },
+  then: function(doneCallback, failCallback) {
+    return this.continueWith(function(t) {
+      t.status == 'done' ? doneCallback(t.result) : failCallback(t.error);
+    });
+  },
+  _update: function(result, error) {
+    if (this.status == 'pending') {
+      if (error) {
+        this.error = error;
+        this.status = 'failed';
+      }
+      else {
+        this.result = result;
+        this.status = 'done';
+      }
+
+      var continuations = this._continuations;
+      this._continuations = null;
+
+      for (var i = 0, c = continuations.length; i < c; i++) {
+        continuations[i](this);
+      }
+    }
+  }
+};
+ss.Task._join = function(tasks, any) {
+  tasks = Array.toArray(tasks);
+  ss.Debug.assert(tasks.length > 1);
+
+  var count = tasks.length;
+
+  var interval = 0;
+  if ((count > 1) && (typeof tasks[0] == 'number')) {
+    interval = tasks[0];
+    tasks = tasks.slice(1);
+    count--;
+  }
+
+  var joinTask = new ss.Task();
+  var seen = 0;
+
+  function continuation(t) {
+    if (joinTask.status == 'pending') {
+      seen++;
+      if (any) {
+        joinTask._update(t);
+      }
+      else if (seen == count) {
+        joinTask._update(true);
+      }
+    }
+  }
+
+  function timeout() {
+    if (joinTask.status == 'pending') {
+      if (any) {
+        joinTask._update(null);
+      }
+      else {
+        joinTask._update(false);
+      }
+    }
+  }
+
+  if (interval != 0) {
+    setTimeout(timeout, interval);
+  }
+
+  for (var i = 0; i < count; i++) {
+    tasks[i].continueWith(continuation);
+  }
+
+  return joinTask;
+}
+ss.Task.all = function() {
+  return ss.Task._join(arguments, false);
+}
+ss.Task.any = function() {
+  return ss.Task._join(arguments, true);
+}
+ss.Task.delay = function(timeout) {
+  var timerTask = new ss.Task();
+
+  setTimeout(function() {
+    timerTask._update(true);
+  }, timeout);
+
+  return timerTask;
+}
+
+
+ss.Deferred = function(result) {
+  this.task = new ss.Task(result);
+}
+ss.Deferred.prototype = {
+  resolve: function(result) {
+    this.task._update(result);
+  },
+  reject: function(error) {
+    this.task._update(null, error || new Error());
+  }
+};
+
+ss.Deferred.registerClass('Deferred');
+ss.Task.registerClass('Task');
 
 ss.IApplication = function() { };
 ss.IApplication.registerInterface('IApplication');
